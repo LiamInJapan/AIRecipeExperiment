@@ -80,6 +80,54 @@ struct Recipe: Codable {
     let likes: Int
 }
 
+struct Instruction: Codable {
+    let name: String
+    let steps: [Step]
+}
+
+struct Step: Codable {
+    let number: Int
+    let step: String
+    let ingredients: [Ingredient]
+    let equipment: [Equipment]
+}
+
+struct Ingredient: Codable {
+    let id: Int
+    let name: String
+    let localizedName: String
+    let image: String
+}
+
+struct Equipment: Codable {
+    let id: Int
+    let name: String
+    let localizedName: String
+    let image: String
+}
+
+func getRecipeDetail(completion: @escaping ([Recipe]) -> Void)
+{
+    let task = URLSession.shared.dataTask(with: instructionsURL) { data, response, error in
+        guard let data = data, error == nil else {
+            print("Error: \(error?.localizedDescription ?? "Unknown error")")
+            return
+        }
+       
+        do {
+            let response = try JSONDecoder().decode([Instruction].self, from: data)
+            print(response)
+        } catch {
+            print("Error: Could not decode response")
+        }
+    }
+
+    task.resume()
+}
+
+let instructionsURL = URL(string: "https://api.spoonacular.com/recipes/729366/analyzedInstructions?apiKey=9d5544857380426eabcc12e48cd39b64")!
+
+
 class ViewController: UIViewController {
 
     @IBOutlet weak var ingredientsTextView: UITextView!
@@ -90,6 +138,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        getRecipeDetail { details in
+                // Do something with the recipes here
+                print(details)
+            }
     }
     
     @IBAction func submitButtonTapped(_ sender: Any) {
