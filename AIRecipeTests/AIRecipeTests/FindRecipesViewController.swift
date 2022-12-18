@@ -52,10 +52,12 @@ class FindRecipesViewController: UIViewController
     @IBOutlet weak var recipeResultsTableView: UITableView!
     
     var recipes: [Recipe] = []
+    var recipesByMissingIngredients: [(Int, Recipe)] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
     }
     
     @IBAction func submitButtonTapped(_ sender: Any) {
@@ -67,6 +69,18 @@ class FindRecipesViewController: UIViewController
         apiClient.searchRecipes(ingredients: ingredients, numberOfResults: numberOfResults) { recipes in
             
             self.recipes = recipes
+
+                    // Create the dictionary that maps the number of missing ingredients to the corresponding recipes
+                    var recipesByMissingIngredients: [Int: Recipe] = [:]
+                    for recipe in recipes {
+                        recipesByMissingIngredients[recipe.id] = recipe
+                    }
+
+                    // Sort the keys in the dictionary in ascending order by the number of missing ingredients
+                    let sortedKeys = recipesByMissingIngredients.keys.sorted { key1, key2 in
+                        return recipesByMissingIngredients[key1]!.missedIngredientCount < recipesByMissingIngredients[key2]!.missedIngredientCount
+                    }
+                    self.recipesByMissingIngredients = sortedKeys.map { key in (recipesByMissingIngredients[key]!.missedIngredientCount, recipesByMissingIngredients[key]!) }
             
             DispatchQueue.main.async {
                 self.recipeResultsTableView.reloadData()
@@ -86,14 +100,37 @@ class FindRecipesViewController: UIViewController
 }
 
 extension FindRecipesViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // Return the number of unique values for the number of missing ingredients
+        return Set(recipesByMissingIngredients.map { $0.0 }).count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // Get the number of missing ingredients for the current section
+        let missingIngredients = Array(Set(recipesByMissingIngredients.map { $0.0 }))[section]
+
+        // Return the number of missing ingredients as the title for the section
+        return "\(missingIngredients) ingredients needed"
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recipes.count
+        // Get the number of missing ingredients for the current section
+        let missingIngredients = Array(Set(recipesByMissingIngredients.map { $0.0 }))[section]
+
+        // Return the number of recipes with the specified number of missing ingredients
+        return recipesByMissingIngredients.filter { $0.0 == missingIngredients }.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
-        let recipe = recipes[indexPath.row]
-        cell.titleLabel.text = recipe.title
+
+        // Get the number of missing ingredients for the current section
+        let missingIngredients = Array(Set(recipesByMissingIngredients.map { $0.0 }))[indexPath.section]
+
+        // Get the recipe for the current row
+        let recipe = recipesByMissingIngredients.filter { $0.0 == missingIngredients }.first?.1
+        cell.titleLabel.text = recipe?.title
         return cell
     }
 }
