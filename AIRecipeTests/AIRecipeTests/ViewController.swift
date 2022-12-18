@@ -127,13 +127,20 @@ func getRecipeDetail(completion: @escaping ([Recipe]) -> Void)
 
 let instructionsURL = URL(string: "https://api.spoonacular.com/recipes/729366/analyzedInstructions?apiKey=9d5544857380426eabcc12e48cd39b64")!
 
+class RecipeCell: UITableViewCell {
+    @IBOutlet weak var titleLabel: UILabel!
+}
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
+{
     @IBOutlet weak var ingredientsTextView: UITextView!
     @IBOutlet weak var numberOfResultsTextField: UITextField!
     @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var recipeResultsTextView: UITextView!
+    
+    @IBOutlet weak var recipeResultsTableView: UITableView!
+    
+    var recipes: [Recipe] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -143,6 +150,18 @@ class ViewController: UIViewController {
                 // Do something with the recipes here
                 print(details)
             }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return recipes.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
+        let recipe = recipes[indexPath.row]
+        cell.titleLabel.text = recipe.title
+        return cell
     }
     
     @IBAction func submitButtonTapped(_ sender: Any) {
@@ -151,9 +170,22 @@ class ViewController: UIViewController {
 
         searchRecipes(ingredients: ingredients, numberOfResults: numberOfResults) { recipes in
             let results = recipes.map { "\($0.id) \($0.title) \($0.image) \($0.usedIngredientCount) \($0.missedIngredientCount) \($0.likes)" }.joined(separator: "\n")
-            self.recipeResultsTextView.text = results
+            
+            self.recipes = recipes
+            self.recipeResultsTableView.reloadData()
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "showRecipeDetail" {
+            let detailViewController = segue.destination as! RecipeDetailViewController
+            let selectedIndexPath = recipeResultsTableView.indexPathForSelectedRow!
+            let selectedRecipe = recipes[selectedIndexPath.row]
+            detailViewController.recipe = selectedRecipe
+        }
+    }
+    
 
 
 }
