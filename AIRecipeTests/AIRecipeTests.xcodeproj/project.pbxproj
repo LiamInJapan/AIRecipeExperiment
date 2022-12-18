@@ -14,6 +14,7 @@
 		0CA1E636294EEEDD0068FC61 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CA1E635294EEEDD0068FC61 /* Assets.xcassets */; };
 		0CA1E639294EEEDD0068FC61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CA1E637294EEEDD0068FC61 /* LaunchScreen.storyboard */; };
 		0CA1E641294F02A00068FC61 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1E640294F02A00068FC61 /* RecipeDetailViewController.swift */; };
+		0CA1E643294F0EA90068FC61 /* RecipeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1E642294F0EA90068FC61 /* RecipeAPIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		0CA1E638294EEEDD0068FC61 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0CA1E63A294EEEDD0068FC61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0CA1E640294F02A00068FC61 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
+		0CA1E642294F0EA90068FC61 /* RecipeAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeAPIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 		0CA1E62B294EEEDB0068FC61 /* AIRecipeTests */ = {
 			isa = PBXGroup;
 			children = (
+				0CA1E642294F0EA90068FC61 /* RecipeAPIClient.swift */,
 				0CA1E62C294EEEDB0068FC61 /* AppDelegate.swift */,
 				0CA1E62E294EEEDB0068FC61 /* SceneDelegate.swift */,
 				0CA1E630294EEEDB0068FC61 /* ViewController.swift */,
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CA1E631294EEEDB0068FC61 /* ViewController.swift in Sources */,
+				0CA1E643294F0EA90068FC61 /* RecipeAPIClient.swift in Sources */,
 				0CA1E62D294EEEDB0068FC61 /* AppDelegate.swift in Sources */,
 				0CA1E641294F02A00068FC61 /* RecipeDetailViewController.swift in Sources */,
 				0CA1E62F294EEEDB0068FC61 /* SceneDelegate.swift in Sources */,
