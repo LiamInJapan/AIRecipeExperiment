@@ -185,8 +185,5 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             detailViewController.recipe = selectedRecipe
         }
     }
-    
-
-
 }
 
