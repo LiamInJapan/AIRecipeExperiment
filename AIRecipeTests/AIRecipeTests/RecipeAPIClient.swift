@@ -13,6 +13,7 @@ class RecipeAPIClient
 {
     static let shared = RecipeAPIClient(apiKey: "9d5544857380426eabcc12e48cd39b64", baseURL: URL(string: "https://api.spoonacular.com/recipes/findByIngredients")!)
     
+    
     let apiKey: String
     let baseURL: URL
     

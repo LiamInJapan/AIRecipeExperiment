@@ -8,11 +8,6 @@
 import UIKit
 import Foundation
 
-let API_KEY = "9d5544857380426eabcc12e48cd39b64"
-let INGREDIENTS = ["tomatoes", "onions", "spaghetti", "Parmesan cheese", "bell peppers", "chocolate"]
-let NUMBER_OF_RESULTS = 10
-let baseURL = URL(string: "https://api.spoonacular.com/recipes/findByIngredients")!
-
 struct Recipe: Codable {
     let id: Int
     let title: String
@@ -48,13 +43,7 @@ struct Equipment: Codable {
     let image: String
 }
 
-let instructionsURL = URL(string: "https://api.spoonacular.com/recipes/729366/analyzedInstructions?apiKey=9d5544857380426eabcc12e48cd39b64")!
-
-class RecipeCell: UITableViewCell {
-    @IBOutlet weak var titleLabel: UILabel!
-}
-
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate
+class FindRecipesViewController: UIViewController
 {
     @IBOutlet weak var ingredientsTextView: UITextView!
     @IBOutlet weak var numberOfResultsTextField: UITextField!
@@ -69,17 +58,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         // Do any additional setup after loading the view.
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recipes.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
-        let recipe = recipes[indexPath.row]
-        cell.titleLabel.text = recipe.title
-        return cell
-    }
-    
     @IBAction func submitButtonTapped(_ sender: Any) {
         let ingredients = ingredientsTextView.text ?? ""
         let numberOfResults = numberOfResultsTextField.text ?? ""
@@ -87,7 +65,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let apiClient = RecipeAPIClient.shared
         
         apiClient.searchRecipes(ingredients: ingredients, numberOfResults: numberOfResults) { recipes in
-            let results = recipes.map { "\($0.id) \($0.title) \($0.image) \($0.usedIngredientCount) \($0.missedIngredientCount) \($0.likes)" }.joined(separator: "\n")
             
             self.recipes = recipes
             
@@ -108,3 +85,24 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
 }
 
+extension FindRecipesViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return recipes.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
+        let recipe = recipes[indexPath.row]
+        cell.titleLabel.text = recipe.title
+        return cell
+    }
+}
+
+extension FindRecipesViewController: UITableViewDelegate {
+
+}
+
+
+class RecipeCell: UITableViewCell {
+    @IBOutlet weak var titleLabel: UILabel!
+}
