@@ -24,12 +24,14 @@ class RecipeAPIClient
 
     func searchRecipes(ingredients: String,
                        numberOfResults: String,
+                       ranking: Int,
                        completion: @escaping ([Recipe]) -> Void)
     {
         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false)!
 
         components.queryItems = [URLQueryItem(name: "apiKey", value: apiKey),
-                                 URLQueryItem(name: "number", value: numberOfResults)]
+                                 URLQueryItem(name: "number", value: numberOfResults),
+                                 URLQueryItem(name: "ranking", value: String(ranking))]
 
         let ingredientsString = ingredients.split(separator: ",").joined(separator: ",")
         components.queryItems?.append(URLQueryItem(name: "ingredients", value: ingredientsString))

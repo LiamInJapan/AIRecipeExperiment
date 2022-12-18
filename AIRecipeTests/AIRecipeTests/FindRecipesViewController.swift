@@ -66,7 +66,7 @@ class FindRecipesViewController: UIViewController
         
         let apiClient = RecipeAPIClient.shared
         
-        apiClient.searchRecipes(ingredients: ingredients, numberOfResults: numberOfResults) { recipes in
+        apiClient.searchRecipes(ingredients: ingredients, numberOfResults: numberOfResults, ranking: 1) { recipes in
             
             self.recipes = recipes
 
